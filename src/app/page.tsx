@@ -9,7 +9,7 @@ import { Separator } from '@/components/ui/separator';
 import { useToast } from "@/hooks/use-toast"
 
 // Kawaii Components
-import AnimatedChefCharacterIcon from '@/components/icons/AnimatedChefCharacterIcon'; // New Icon
+import ChefHatIcon from '@/components/icons/ChefHatIcon';
 import BroccoliIcon from '@/components/icons/BroccoliIcon';
 import FryingPanIcon from '@/components/icons/FryingPanIcon';
 import RamenLoaderIcon from '@/components/icons/RamenLoaderIcon';
@@ -117,7 +117,7 @@ export default function KawaiiChefPage() {
       <header className="text-center mb-8 mt-4 sm:mt-8">
         <div className="p-6 rounded-2xl inline-block">
           <div className="flex items-center justify-center gap-3">
-            <AnimatedChefCharacterIcon className="h-14 w-14 sm:h-16 sm:w-16" /> {/* Replaced ChefHatIcon */}
+            <ChefHatIcon className="h-14 w-14 sm:h-16 sm:w-16" />
             <h1 className="text-4xl sm:text-5xl font-extrabold font-headline text-primary tracking-tight">
               The Pocket Chef
             </h1>
