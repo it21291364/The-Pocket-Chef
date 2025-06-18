@@ -113,16 +113,9 @@ export default function KawaiiChefPage() {
   return (
     <div 
       className="min-h-screen flex flex-col items-center justify-start p-4 sm:p-8 bg-background selection:bg-primary/30 selection:text-primary-foreground"
-      style={{
-        backgroundImage: 'url("https://storage.googleapis.com/aif-static-content/export_stencils%2Fimage%2F8d4d841d-a131-4d16-a6d3-f703ac105e52.png")',
-        backgroundSize: 'cover',
-        backgroundPosition: 'center',
-        backgroundRepeat: 'no-repeat',
-        backgroundAttachment: 'fixed',
-      }}
     >
       <header className="text-center mb-8 mt-4 sm:mt-8">
-        <div className="bg-background/80 backdrop-blur-sm p-6 rounded-2xl shadow-md inline-block">
+        <div className="p-6 rounded-2xl inline-block">
           <div className="flex items-center justify-center gap-3">
             <ChefHatIcon />
             <h1 className="text-4xl sm:text-5xl font-extrabold font-headline text-primary tracking-tight">
@@ -286,7 +279,7 @@ export default function KawaiiChefPage() {
       </KawaiiModal>
       
       <footer className="text-center mt-12 mb-6 text-sm text-foreground/60 font-body">
-        <div className="bg-background/80 backdrop-blur-sm p-4 rounded-2xl shadow-md inline-block">
+        <div className="p-4 rounded-2xl inline-block">
           <p>&copy; {new Date().getFullYear()} The Pocket Chef. Made with lots of <Heart className="inline h-4 w-4 text-accent fill-accent" /> and a sprinkle of AI magic!</p>
         </div>
       </footer>
