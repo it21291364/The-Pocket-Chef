@@ -20,7 +20,7 @@ export type GenerateRecipeInput = z.infer<typeof GenerateRecipeInputSchema>;
 const GenerateRecipeOutputSchema = z.object({
   recipeName: z.string().describe('The name of the generated recipe.'),
   description: z.string().describe('A short, friendly description of the recipe.'),
-  ingredients: z.array(z.string()).describe('A list of ingredients required for the recipe.'),
+  ingredients: z.array(z.string()).describe('A list of ingredients required for the recipe, using ONLY the ingredients provided by the user.'),
   instructions: z.array(z.string()).describe('A list of instructions for preparing the recipe.'),
   alternativeMethod: z
     .object({
@@ -45,7 +45,11 @@ const prompt = ai.definePrompt({
   output: {schema: GenerateRecipeOutputSchema},
   prompt: `You are a friendly, creative chef specializing in simple, delicious recipes.
 
-  Generate a recipe based on the ingredients and equipment provided by the user.  If a common piece of equipment is missing, provide an "alternativeMethod" section.
+  Generate a recipe based on the ingredients and equipment provided by the user.
+  IMPORTANT: You MUST ONLY use the ingredients listed in the "Ingredients" section below. Do NOT add any extra ingredients to the recipe.
+  List the ingredients required for the recipe in the "ingredients" output field, ensuring they are from the user's provided list.
+
+  If a common piece of equipment is missing, provide an "alternativeMethod" section.
 
   Ingredients: {{ingredients}}
   Equipment: {{equipment}}`,
@@ -62,3 +66,4 @@ const generateRecipeFlow = ai.defineFlow(
     return output!;
   }
 );
+
