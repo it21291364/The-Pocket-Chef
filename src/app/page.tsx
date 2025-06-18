@@ -115,7 +115,7 @@ export default function KawaiiChefPage() {
         <div className="flex items-center justify-center gap-3">
           <ChefHatIcon />
           <h1 className="text-4xl sm:text-5xl font-extrabold font-headline text-primary tracking-tight">
-            Kawaii Adaptive Chef
+            The Pocket Chef
           </h1>
         </div>
         <p className="text-lg text-foreground/80 mt-2 font-body">
@@ -146,6 +146,7 @@ export default function KawaiiChefPage() {
             disabled={isLoading}
             className="w-full text-lg py-6 rounded-xl jiggle-button bg-primary hover:bg-primary/90 text-primary-foreground shadow-kawaii font-headline"
             aria-label="Create a Recipe"
+            suppressHydrationWarning={true}
           >
             <Sparkles className="mr-2 h-6 w-6" />
             Create a Recipe!
@@ -209,6 +210,7 @@ export default function KawaiiChefPage() {
                   onClick={() => openModal('drinks')}
                   className="flex-1 py-5 rounded-xl jiggle-button bg-blue-400 hover:bg-blue-500 text-white shadow-kawaii font-headline"
                   aria-label="Suggest Drinks"
+                  suppressHydrationWarning={true}
                 >
                   <JuiceBoxIcon className="mr-2" />
                   Suggest Drinks!
@@ -217,6 +219,7 @@ export default function KawaiiChefPage() {
                   onClick={() => openModal('nutrition')}
                   className="flex-1 py-5 rounded-xl jiggle-button bg-purple-400 hover:bg-purple-500 text-white shadow-kawaii font-headline"
                   aria-label="Get Nutrition Info"
+                  suppressHydrationWarning={true}
                 >
                   <HappyHeartIcon className="mr-2" />
                   Nutrition Info!
@@ -271,7 +274,7 @@ export default function KawaiiChefPage() {
       </KawaiiModal>
       
       <footer className="text-center mt-12 mb-6 text-sm text-foreground/60 font-body">
-        <p>&copy; {new Date().getFullYear()} Kawaii Chef. Made with lots of <Heart className="inline h-4 w-4 text-pink-400 fill-pink-400" /> and a sprinkle of AI magic!</p>
+        <p>&copy; {new Date().getFullYear()} The Pocket Chef. Made with lots of <Heart className="inline h-4 w-4 text-pink-400 fill-pink-400" /> and a sprinkle of AI magic!</p>
       </footer>
     </div>
   );
