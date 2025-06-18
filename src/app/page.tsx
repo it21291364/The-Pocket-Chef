@@ -1,3 +1,4 @@
+
 "use client";
 
 import React, { useState, useEffect, Suspense } from 'react';
@@ -110,17 +111,28 @@ export default function KawaiiChefPage() {
   };
 
   return (
-    <div className="min-h-screen flex flex-col items-center justify-start p-4 sm:p-8 bg-background selection:bg-primary/30 selection:text-primary-foreground">
+    <div 
+      className="min-h-screen flex flex-col items-center justify-start p-4 sm:p-8 bg-background selection:bg-primary/30 selection:text-primary-foreground"
+      style={{
+        backgroundImage: 'url("https://storage.googleapis.com/aif-static-content/export_stencils%2Fimage%2F8d4d841d-a131-4d16-a6d3-f703ac105e52.png")',
+        backgroundSize: 'cover',
+        backgroundPosition: 'center',
+        backgroundRepeat: 'no-repeat',
+        backgroundAttachment: 'fixed',
+      }}
+    >
       <header className="text-center mb-8 mt-4 sm:mt-8">
-        <div className="flex items-center justify-center gap-3">
-          <ChefHatIcon />
-          <h1 className="text-4xl sm:text-5xl font-extrabold font-headline text-primary tracking-tight">
-            The Pocket Chef
-          </h1>
+        <div className="bg-background/80 backdrop-blur-sm p-6 rounded-2xl shadow-md inline-block">
+          <div className="flex items-center justify-center gap-3">
+            <ChefHatIcon />
+            <h1 className="text-4xl sm:text-5xl font-extrabold font-headline text-primary tracking-tight">
+              The Pocket Chef
+            </h1>
+          </div>
+          <p className="text-lg text-foreground/80 mt-2 font-body">
+            Your adorable kitchen helper for yummy ideas!
+          </p>
         </div>
-        <p className="text-lg text-foreground/80 mt-2 font-body">
-          Your adorable kitchen helper for yummy ideas!
-        </p>
       </header>
 
       <main className="w-full max-w-3xl bg-card p-6 sm:p-8 rounded-2xl shadow-kawaii-lg">
@@ -274,7 +286,9 @@ export default function KawaiiChefPage() {
       </KawaiiModal>
       
       <footer className="text-center mt-12 mb-6 text-sm text-foreground/60 font-body">
-        <p>&copy; {new Date().getFullYear()} The Pocket Chef. Made with lots of <Heart className="inline h-4 w-4 text-accent fill-accent" /> and a sprinkle of AI magic!</p>
+        <div className="bg-background/80 backdrop-blur-sm p-4 rounded-2xl shadow-md inline-block">
+          <p>&copy; {new Date().getFullYear()} The Pocket Chef. Made with lots of <Heart className="inline h-4 w-4 text-accent fill-accent" /> and a sprinkle of AI magic!</p>
+        </div>
       </footer>
     </div>
   );
@@ -286,6 +300,5 @@ const Heart = ({ className } : { className?: string }) => (
     <path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/>
   </svg>
 );
-
 
     
