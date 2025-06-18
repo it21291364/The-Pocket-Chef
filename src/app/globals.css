@@ -25,8 +25,8 @@
     --accent: 28 100% 86%; /* Creamy Peach #FFDAB9 */
     --accent-foreground: 0 0% 30%; /* Darker text for peach */
 
-    --destructive: 0 70% 88%; /* Pastel Red */
-    --destructive-foreground: 0 0% 100%;
+    --destructive: 0 70% 88%; /* Pastel Red #FFC2C2 */
+    --destructive-foreground: 0 0% 20%; /* Dark text for readability on light pastel red */
 
     --border: 0 0% 91.8%; /* Light grey #EAEAEA */
     --input: 0 0% 91.8%;
@@ -72,8 +72,8 @@
     --accent: 28 100% 76%; /* Slightly darker Peach for dark mode */
     --accent-foreground: 0 0% 10%;
 
-    --destructive: 0 62.8% 30.6%;
-    --destructive-foreground: 0 0% 98%;
+    --destructive: 0 70% 60%; /* Muted Red for dark mode #eb6666 */
+    --destructive-foreground: 0 0% 95%; /* Light text for readability on muted red */
 
     --border: 0 0% 20%;
     --input: 0 0% 20%;

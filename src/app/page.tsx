@@ -208,7 +208,7 @@ export default function KawaiiChefPage() {
               <div className="flex flex-col sm:flex-row gap-3 justify-center">
                 <Button
                   onClick={() => openModal('drinks')}
-                  className="flex-1 py-5 rounded-xl jiggle-button bg-blue-400 hover:bg-blue-500 text-white shadow-kawaii font-headline"
+                  className="flex-1 py-5 rounded-xl jiggle-button bg-accent hover:bg-accent/90 text-accent-foreground shadow-kawaii font-headline"
                   aria-label="Suggest Drinks"
                   suppressHydrationWarning={true}
                 >
@@ -217,7 +217,7 @@ export default function KawaiiChefPage() {
                 </Button>
                 <Button
                   onClick={() => openModal('nutrition')}
-                  className="flex-1 py-5 rounded-xl jiggle-button bg-purple-400 hover:bg-purple-500 text-white shadow-kawaii font-headline"
+                  className="flex-1 py-5 rounded-xl jiggle-button bg-secondary hover:bg-secondary/90 text-secondary-foreground shadow-kawaii font-headline"
                   aria-label="Get Nutrition Info"
                   suppressHydrationWarning={true}
                 >
@@ -240,17 +240,17 @@ export default function KawaiiChefPage() {
         {modalType === 'drinks' && drinkPairings && !isModalLoading && (
           <div className="space-y-4">
             <div>
-              <h4 className="text-lg font-headline text-pink-500">🍷 Wine Pairing</h4>
+              <h4 className="text-lg font-headline text-destructive">🍷 Wine Pairing</h4>
               <p className="font-semibold">{drinkPairings.wine.pairing}</p>
               <p className="text-sm text-foreground/80">{drinkPairings.wine.reason}</p>
             </div>
             <div>
-              <h4 className="text-lg font-headline text-yellow-600">🍺 Beer Pairing</h4>
+              <h4 className="text-lg font-headline text-accent">🍺 Beer Pairing</h4>
               <p className="font-semibold">{drinkPairings.beer.pairing}</p>
               <p className="text-sm text-foreground/80">{drinkPairings.beer.reason}</p>
             </div>
             <div>
-              <h4 className="text-lg font-headline text-green-500">🍹 Non-Alcoholic</h4>
+              <h4 className="text-lg font-headline text-primary">🍹 Non-Alcoholic</h4>
               <p className="font-semibold">{drinkPairings.non_alcoholic.pairing}</p>
               <p className="text-sm text-foreground/80">{drinkPairings.non_alcoholic.reason}</p>
             </div>
@@ -274,7 +274,7 @@ export default function KawaiiChefPage() {
       </KawaiiModal>
       
       <footer className="text-center mt-12 mb-6 text-sm text-foreground/60 font-body">
-        <p>&copy; {new Date().getFullYear()} The Pocket Chef. Made with lots of <Heart className="inline h-4 w-4 text-pink-400 fill-pink-400" /> and a sprinkle of AI magic!</p>
+        <p>&copy; {new Date().getFullYear()} The Pocket Chef. Made with lots of <Heart className="inline h-4 w-4 text-accent fill-accent" /> and a sprinkle of AI magic!</p>
       </footer>
     </div>
   );
