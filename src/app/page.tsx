@@ -9,7 +9,7 @@ import { Separator } from '@/components/ui/separator';
 import { useToast } from "@/hooks/use-toast"
 
 // Kawaii Components
-import ChefHatIcon from '@/components/icons/ChefHatIcon';
+import AnimatedChefCharacterIcon from '@/components/icons/AnimatedChefCharacterIcon'; // New Icon
 import BroccoliIcon from '@/components/icons/BroccoliIcon';
 import FryingPanIcon from '@/components/icons/FryingPanIcon';
 import RamenLoaderIcon from '@/components/icons/RamenLoaderIcon';
@@ -117,7 +117,7 @@ export default function KawaiiChefPage() {
       <header className="text-center mb-8 mt-4 sm:mt-8">
         <div className="p-6 rounded-2xl inline-block">
           <div className="flex items-center justify-center gap-3">
-            <ChefHatIcon />
+            <AnimatedChefCharacterIcon className="h-14 w-14 sm:h-16 sm:w-16" /> {/* Replaced ChefHatIcon */}
             <h1 className="text-4xl sm:text-5xl font-extrabold font-headline text-primary tracking-tight">
               The Pocket Chef
             </h1>
@@ -293,5 +293,3 @@ const Heart = ({ className } : { className?: string }) => (
     <path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/>
   </svg>
 );
-
-    
