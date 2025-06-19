@@ -1,5 +1,6 @@
 import type {Metadata} from 'next';
 import { Toaster } from "@/components/ui/toaster"
+import { ThemeProvider } from "@/components/ThemeProvider";
 import './globals.css';
 
 export const metadata: Metadata = {
@@ -13,7 +14,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en">
+    <html lang="en" suppressHydrationWarning>
       <head>
         <link rel="preconnect" href="https://fonts.googleapis.com" />
         <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
@@ -27,17 +28,22 @@ export default function RootLayout({
         className="font-body antialiased"
         style={{
           // @ts-ignore
-          "--font-nunito": "var(--font-fredoka-one)", // Using Fredoka One as primary heading as it's more distinctively "kawaii"
-          "--font-quicksand": "var(--font-mplus-rounded-1c)", // Using M PLUS Rounded 1c for body
+          "--font-nunito": "var(--font-fredoka-one)", 
+          "--font-quicksand": "var(--font-mplus-rounded-1c)", 
           "--font-fredoka-one": "'Fredoka One', cursive",
           "--font-mplus-rounded-1c": "'M PLUS Rounded 1c', sans-serif",
         }}
       >
-        {children}
-        <Toaster />
+        <ThemeProvider
+          attribute="class"
+          defaultTheme="system"
+          enableSystem
+          disableTransitionOnChange
+        >
+          {children}
+          <Toaster />
+        </ThemeProvider>
       </body>
     </html>
   );
 }
-
-    

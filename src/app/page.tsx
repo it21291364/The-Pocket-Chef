@@ -7,11 +7,11 @@ import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/com
 import { ScrollArea } from '@/components/ui/scroll-area';
 import { Separator } from '@/components/ui/separator';
 import { useToast } from "@/hooks/use-toast"
+import { DarkModeToggle } from '@/components/DarkModeToggle';
 
 // Kawaii Components
 import ChefHatIcon from '@/components/icons/ChefHatIcon';
 import BroccoliIcon from '@/components/icons/BroccoliIcon';
-// import FryingPanIcon from '@/components/icons/FryingPanIcon'; // Removed
 import RamenLoaderIcon from '@/components/icons/RamenLoaderIcon';
 import LightbulbIcon from '@/components/icons/LightbulbIcon';
 import JuiceBoxIcon from '@/components/icons/JuiceBoxIcon';
@@ -33,7 +33,6 @@ type ModalType = 'drinks' | 'nutrition';
 
 export default function KawaiiChefPage() {
   const [ingredients, setIngredients] = useState<string[]>([]);
-  // const [equipment, setEquipment] = useState<string[]>([]); // Removed
   
   const [recipeData, setRecipeData] = useState<GenerateRecipeOutput | null>(null);
   const [drinkPairings, setDrinkPairings] = useState<SuggestDrinkPairingsOutput | null>(null);
@@ -48,9 +47,8 @@ export default function KawaiiChefPage() {
 
   const { toast } = useToast();
 
-  // Clear error when inputs change
   useEffect(() => {
-    if (ingredients.length > 0) { // Condition updated
+    if (ingredients.length > 0) { 
       setError(null);
     }
   }, [ingredients]);
@@ -62,9 +60,8 @@ export default function KawaiiChefPage() {
     }
     setError(null);
     setIsLoading(true);
-    setRecipeData(null); // Clear previous recipe
+    setRecipeData(null);
 
-    // Updated to pass only ingredients
     const result = await generateRecipeAction({ ingredients }); 
     setIsLoading(false);
 
@@ -113,8 +110,11 @@ export default function KawaiiChefPage() {
 
   return (
     <div 
-      className="min-h-screen flex flex-col items-center justify-start p-4 sm:p-8 bg-background selection:bg-primary/30 selection:text-primary-foreground"
+      className="min-h-screen flex flex-col items-center justify-start p-4 sm:p-8 bg-background selection:bg-primary/30 selection:text-primary-foreground relative"
     >
+      <div className="absolute top-4 right-4 sm:top-6 sm:right-6 z-10">
+        <DarkModeToggle />
+      </div>
       <header className="text-center mb-8 mt-4 sm:mt-8">
         <div className="p-6 rounded-2xl inline-block">
           <div className="flex items-center justify-center gap-3">
@@ -139,7 +139,6 @@ export default function KawaiiChefPage() {
             label="What yummy ingredients do you have?"
             icon={<BroccoliIcon />}
           />
-          {/* Equipment TagInput removed */}
           <Button
             onClick={handleGenerateRecipe}
             disabled={isLoading}
@@ -279,10 +278,3 @@ export default function KawaiiChefPage() {
     </div>
   );
 }
-
-// Using Heart from lucide-react directly for the footer
-const HeartIcon = ({ className } : { className?: string }) => ( // Renamed to avoid conflict with lucide-react's Heart
-  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" className={className}>
-    <path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/>
-  </svg>
-);
