@@ -1,4 +1,5 @@
 
+
 "use client";
 
 import React, { useState, useEffect, Suspense } from 'react';
@@ -6,6 +7,8 @@ import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
 import { ScrollArea } from '@/components/ui/scroll-area';
 import { Separator } from '@/components/ui/separator';
+import { Checkbox } from '@/components/ui/checkbox';
+import { Label } from '@/components/ui/label';
 import { useToast } from "@/hooks/use-toast"
 import { DarkModeToggle } from '@/components/DarkModeToggle';
 
@@ -21,15 +24,17 @@ import ErrorDisplay from '@/components/kawaii/ErrorDisplay';
 import KawaiiModal from '@/components/kawaii/KawaiiModal';
 
 // Lucide Icons
-import { Sparkles, CheckCircle2, Info, Utensils, GlassWater, Target, Heart } from 'lucide-react';
+import { Sparkles, CheckCircle2, Info, Utensils, GlassWater, Target, Heart, Lightbulb } from 'lucide-react';
 
 // Actions & Types
-import { generateRecipeAction, suggestDrinkPairingsAction, getNutritionInfoAction } from './actions';
+import { generateRecipeAction, suggestDrinkPairingsAction, getNutritionInfoAction, suggestComplementaryIngredientsAction } from './actions';
 import type { GenerateRecipeOutput } from '@/ai/flows/generate-recipe';
 import type { SuggestDrinkPairingsOutput } from '@/ai/flows/suggest-drink-pairings';
 import type { GetNutritionInfoOutput } from '@/ai/flows/get-nutrition-information';
+import type { SuggestComplementaryIngredientsOutput } from '@/ai/flows/suggest-complementary-ingredients';
 
-type ModalType = 'drinks' | 'nutrition';
+
+type ModalType = 'drinks' | 'nutrition' | 'complements';
 
 export default function KawaiiChefPage() {
   const [ingredients, setIngredients] = useState<string[]>([]);
@@ -38,12 +43,16 @@ export default function KawaiiChefPage() {
   const [drinkPairings, setDrinkPairings] = useState<SuggestDrinkPairingsOutput | null>(null);
   const [nutritionInfo, setNutritionInfo] = useState<GetNutritionInfoOutput | null>(null);
   
-  const [isLoading, setIsLoading] = useState(false);
-  const [isModalLoading, setIsModalLoading] = useState(false);
+  const [isLoading, setIsLoading] = useState(false); // For main recipe generation
+  const [isLoadingSuggestions, setIsLoadingSuggestions] = useState(false); // For complementary suggestions
+  const [isModalLoading, setIsModalLoading] = useState(false); // For modal content (drinks, nutrition)
   const [error, setError] = useState<string | null>(null);
   
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [modalType, setModalType] = useState<ModalType | null>(null);
+
+  const [complementarySuggestions, setComplementarySuggestions] = useState<string[] | null>(null);
+  const [selectedComplements, setSelectedComplements] = useState<string[]>([]);
 
   const { toast } = useToast();
 
@@ -53,16 +62,10 @@ export default function KawaiiChefPage() {
     }
   }, [ingredients]);
 
-  const handleGenerateRecipe = async () => {
-    if (ingredients.length === 0) {
-      setError("Oopsie! Please add some ingredients so I can cook something up!");
-      return;
-    }
-    setError(null);
+  const proceedToGenerateRecipe = async (finalIngredients: string[]) => {
     setIsLoading(true);
     setRecipeData(null);
-
-    const result = await generateRecipeAction({ ingredients }); 
+    const result = await generateRecipeAction({ ingredients: finalIngredients });
     setIsLoading(false);
 
     if ('error' in result) {
@@ -73,15 +76,64 @@ export default function KawaiiChefPage() {
     }
   };
 
+  const handleGenerateRecipe = async () => {
+    if (ingredients.length === 0) {
+      setError("Oopsie! Please add some ingredients so I can cook something up!");
+      return;
+    }
+    setError(null);
+    setRecipeData(null); // Clear previous recipe
+    setComplementarySuggestions(null); // Clear previous suggestions
+    setSelectedComplements([]); // Clear selections
+
+    setIsLoadingSuggestions(true);
+    const suggestionResult = await suggestComplementaryIngredientsAction({ initialIngredients: ingredients });
+    setIsLoadingSuggestions(false);
+
+    if ('error' in suggestionResult) {
+      toast({ title: "Suggestion Error", description: suggestionResult.error, variant: "destructive" });
+      // Proceed with original ingredients if suggestions fail
+      await proceedToGenerateRecipe(ingredients);
+    } else if (suggestionResult.suggestedItems && suggestionResult.suggestedItems.length > 0) {
+      setComplementarySuggestions(suggestionResult.suggestedItems);
+      setModalType('complements');
+      setIsModalOpen(true);
+    } else {
+      // No suggestions or empty, proceed with original ingredients
+      await proceedToGenerateRecipe(ingredients);
+    }
+  };
+  
+  const handleComplementCheck = (item: string, checked: boolean) => {
+    setSelectedComplements(prev => 
+      checked ? [...prev, item] : prev.filter(i => i !== item)
+    );
+  };
+
+  const handleConfirmComplements = async () => {
+    closeModal();
+    const finalIngredients = Array.from(new Set([...ingredients, ...selectedComplements]));
+    await proceedToGenerateRecipe(finalIngredients);
+  };
+
+  const handleSkipComplements = async () => {
+    closeModal();
+    await proceedToGenerateRecipe(ingredients);
+  };
+
+
   const openModal = async (type: ModalType) => {
-    if (!recipeData) return;
+    if (type !== 'complements' && !recipeData) return; // For drinks/nutrition, recipe must exist
 
     setModalType(type);
     setIsModalOpen(true);
-    setIsModalLoading(true);
-    setError(null); 
+    
+    if (type === 'drinks' || type === 'nutrition') {
+      setIsModalLoading(true);
+      setError(null); 
+    }
 
-    if (type === 'drinks') {
+    if (type === 'drinks' && recipeData) {
       setDrinkPairings(null);
       const result = await suggestDrinkPairingsAction({ recipeName: recipeData.recipeName, ingredients: recipeData.ingredients });
       if ('error' in result) {
@@ -89,7 +141,7 @@ export default function KawaiiChefPage() {
       } else {
         setDrinkPairings(result);
       }
-    } else if (type === 'nutrition') {
+    } else if (type === 'nutrition' && recipeData) {
       setNutritionInfo(null);
       const result = await getNutritionInfoAction({ ingredients: recipeData.ingredients });
        if ('error' in result) {
@@ -98,14 +150,20 @@ export default function KawaiiChefPage() {
         setNutritionInfo(result);
       }
     }
-    setIsModalLoading(false);
+    if (type === 'drinks' || type === 'nutrition') {
+      setIsModalLoading(false);
+    }
   };
 
   const closeModal = () => {
     setIsModalOpen(false);
-    setModalType(null);
+    // Reset states based on modal type if necessary, or a general reset
     setDrinkPairings(null);
     setNutritionInfo(null);
+    // Complementary suggestions are reset before opening or when new recipe is generated
+    // setComplementarySuggestions(null); 
+    // setSelectedComplements([]);
+    setModalType(null);
   };
 
   return (
@@ -141,19 +199,19 @@ export default function KawaiiChefPage() {
           />
           <Button
             onClick={handleGenerateRecipe}
-            disabled={isLoading}
+            disabled={isLoading || isLoadingSuggestions}
             className="w-full text-lg py-6 rounded-xl jiggle-button bg-primary hover:bg-primary/90 text-primary-foreground shadow-kawaii font-headline"
             aria-label="Create a Recipe"
             suppressHydrationWarning={true}
           >
-            <Sparkles className="mr-2 h-6 w-6" />
-            Create a Recipe!
+            {(isLoading || isLoadingSuggestions) ? <RamenLoaderIcon /> : <Sparkles className="mr-2 h-6 w-6" />}
+            {(isLoading || isLoadingSuggestions) ? "Thinking..." : "Create a Recipe!"}
           </Button>
         </section>
         
-        {error && !isLoading && <ErrorDisplay message={error} />}
+        {error && !isLoading && !isLoadingSuggestions && <ErrorDisplay message={error} />}
 
-        {isLoading && (
+        {(isLoading || isLoadingSuggestions) && !recipeData && (
           <div className="flex justify-center items-center my-10">
             <RamenLoaderIcon />
           </div>
@@ -231,9 +289,13 @@ export default function KawaiiChefPage() {
       <KawaiiModal
         isOpen={isModalOpen}
         onClose={closeModal}
-        title={modalType === 'drinks' ? 'Cute Drink Pairings!' : 'Yummy Nutrition Facts!'}
+        title={
+          modalType === 'drinks' ? 'Cute Drink Pairings!' :
+          modalType === 'nutrition' ? 'Yummy Nutrition Facts!' :
+          modalType === 'complements' ? 'Add these to your recipe?' : 'Details'
+        }
       >
-        {isModalLoading && <div className="flex justify-center items-center p-8"><RamenLoaderIcon /></div>}
+        {isModalLoading && modalType !== 'complements' && <div className="flex justify-center items-center p-8"><RamenLoaderIcon /></div>}
         
         {modalType === 'drinks' && drinkPairings && !isModalLoading && (
           <div className="space-y-4">
@@ -265,7 +327,37 @@ export default function KawaiiChefPage() {
             <p className="text-xs italic text-foreground/60">{nutritionInfo.disclaimer}</p>
           </div>
         )}
-        {!isModalLoading && ((modalType === 'drinks' && !drinkPairings) || (modalType === 'nutrition' && !nutritionInfo)) && (
+
+        {modalType === 'complements' && complementarySuggestions && (
+          <div className="space-y-4">
+            <p className="text-sm text-foreground/80 font-body">I found some common items that might go well with your ingredients. Check any you have and would like to include:</p>
+            <div className="space-y-2 max-h-60 overflow-y-auto p-1">
+              {complementarySuggestions.map((item, index) => (
+                <div key={index} className="flex items-center space-x-2 p-2 rounded-md hover:bg-accent/20">
+                  <Checkbox 
+                    id={`comp-${index}-${item.replace(/\s+/g, '-')}`} // Ensure unique ID
+                    onCheckedChange={(checked) => handleComplementCheck(item, !!checked)}
+                    checked={selectedComplements.includes(item)}
+                    className="rounded-md"
+                  />
+                  <Label htmlFor={`comp-${index}-${item.replace(/\s+/g, '-')}`} className="text-sm font-medium font-body leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70 cursor-pointer">
+                    {item}
+                  </Label>
+                </div>
+              ))}
+            </div>
+            <div className="flex justify-end gap-3 pt-4">
+              <Button variant="outline" onClick={handleSkipComplements} className="font-headline shadow-kawaii jiggle-button">
+                Just My Ingredients
+              </Button>
+              <Button onClick={handleConfirmComplements} className="bg-primary hover:bg-primary/90 text-primary-foreground font-headline shadow-kawaii jiggle-button">
+                Add Selected & Cook!
+              </Button>
+            </div>
+          </div>
+        )}
+
+        {!isModalLoading && modalType !== 'complements' && ((modalType === 'drinks' && !drinkPairings) || (modalType === 'nutrition' && !nutritionInfo)) && (
           <ErrorDisplay message="Aww, couldn't fetch the details this time. Maybe try again?"/>
         )}
       </KawaiiModal>
@@ -279,3 +371,4 @@ export default function KawaiiChefPage() {
   );
 }
 
+    
