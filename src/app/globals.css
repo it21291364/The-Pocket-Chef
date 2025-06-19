@@ -70,7 +70,7 @@
     --muted-foreground: 0 0% 63.9%;
 
     --accent: 28 100% 76%; /* Slightly darker Peach for dark mode */
-    --accent-foreground: 0 0% 10%;
+    --accent-foreground: 0 0% 95%; /* Light color for contrast on dark accent */
 
     --destructive: 0 70% 60%; /* Muted Red for dark mode #eb6666 */
     --destructive-foreground: 0 0% 95%; /* Light text for readability on muted red */
