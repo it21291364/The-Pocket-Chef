@@ -11,7 +11,7 @@ import { useToast } from "@/hooks/use-toast"
 // Kawaii Components
 import ChefHatIcon from '@/components/icons/ChefHatIcon';
 import BroccoliIcon from '@/components/icons/BroccoliIcon';
-import FryingPanIcon from '@/components/icons/FryingPanIcon';
+// import FryingPanIcon from '@/components/icons/FryingPanIcon'; // Removed
 import RamenLoaderIcon from '@/components/icons/RamenLoaderIcon';
 import LightbulbIcon from '@/components/icons/LightbulbIcon';
 import JuiceBoxIcon from '@/components/icons/JuiceBoxIcon';
@@ -21,7 +21,7 @@ import ErrorDisplay from '@/components/kawaii/ErrorDisplay';
 import KawaiiModal from '@/components/kawaii/KawaiiModal';
 
 // Lucide Icons
-import { Sparkles, CheckCircle2, Info, Utensils, GlassWater, Target } from 'lucide-react';
+import { Sparkles, CheckCircle2, Info, Utensils, GlassWater, Target, Heart } from 'lucide-react';
 
 // Actions & Types
 import { generateRecipeAction, suggestDrinkPairingsAction, getNutritionInfoAction } from './actions';
@@ -33,7 +33,7 @@ type ModalType = 'drinks' | 'nutrition';
 
 export default function KawaiiChefPage() {
   const [ingredients, setIngredients] = useState<string[]>([]);
-  const [equipment, setEquipment] = useState<string[]>([]);
+  // const [equipment, setEquipment] = useState<string[]>([]); // Removed
   
   const [recipeData, setRecipeData] = useState<GenerateRecipeOutput | null>(null);
   const [drinkPairings, setDrinkPairings] = useState<SuggestDrinkPairingsOutput | null>(null);
@@ -50,10 +50,10 @@ export default function KawaiiChefPage() {
 
   // Clear error when inputs change
   useEffect(() => {
-    if (ingredients.length > 0 || equipment.length > 0) {
+    if (ingredients.length > 0) { // Condition updated
       setError(null);
     }
-  }, [ingredients, equipment]);
+  }, [ingredients]);
 
   const handleGenerateRecipe = async () => {
     if (ingredients.length === 0) {
@@ -64,7 +64,8 @@ export default function KawaiiChefPage() {
     setIsLoading(true);
     setRecipeData(null); // Clear previous recipe
 
-    const result = await generateRecipeAction({ ingredients, equipment });
+    // Updated to pass only ingredients
+    const result = await generateRecipeAction({ ingredients }); 
     setIsLoading(false);
 
     if ('error' in result) {
@@ -81,7 +82,7 @@ export default function KawaiiChefPage() {
     setModalType(type);
     setIsModalOpen(true);
     setIsModalLoading(true);
-    setError(null); // Clear main page error for modal specific errors
+    setError(null); 
 
     if (type === 'drinks') {
       setDrinkPairings(null);
@@ -138,14 +139,7 @@ export default function KawaiiChefPage() {
             label="What yummy ingredients do you have?"
             icon={<BroccoliIcon />}
           />
-          <TagInput
-            id="equipment-input"
-            tags={equipment}
-            setTags={setEquipment}
-            placeholder="e.g., oven, magic wand..."
-            label="What are your happy kitchen tools?"
-            icon={<FryingPanIcon />}
-          />
+          {/* Equipment TagInput removed */}
           <Button
             onClick={handleGenerateRecipe}
             disabled={isLoading}
@@ -272,7 +266,6 @@ export default function KawaiiChefPage() {
             <p className="text-xs italic text-foreground/60">{nutritionInfo.disclaimer}</p>
           </div>
         )}
-         {/* Error display within modal if API call failed */}
         {!isModalLoading && ((modalType === 'drinks' && !drinkPairings) || (modalType === 'nutrition' && !nutritionInfo)) && (
           <ErrorDisplay message="Aww, couldn't fetch the details this time. Maybe try again?"/>
         )}
@@ -288,7 +281,7 @@ export default function KawaiiChefPage() {
 }
 
 // Using Heart from lucide-react directly for the footer
-const Heart = ({ className } : { className?: string }) => (
+const HeartIcon = ({ className } : { className?: string }) => ( // Renamed to avoid conflict with lucide-react's Heart
   <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" className={className}>
     <path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/>
   </svg>

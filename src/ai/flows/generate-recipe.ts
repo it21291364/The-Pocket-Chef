@@ -13,7 +13,7 @@ import {z} from 'genkit';
 
 const GenerateRecipeInputSchema = z.object({
   ingredients: z.array(z.string()).describe('A list of ingredients the user has available.'),
-  equipment: z.array(z.string()).describe('A list of kitchen equipment the user has available.'),
+  // equipment field removed
 });
 export type GenerateRecipeInput = z.infer<typeof GenerateRecipeInputSchema>;
 
@@ -27,7 +27,7 @@ const GenerateRecipeOutputSchema = z.object({
       description: z
         .string()
         .describe(
-          'A description of an alternative method for preparing the recipe if a common piece of equipment is missing.'
+          'A description of an alternative method for preparing the recipe if a common piece of equipment is missing (e.g., oven, microwave).'
         ),
     })
     .optional()
@@ -45,14 +45,13 @@ const prompt = ai.definePrompt({
   output: {schema: GenerateRecipeOutputSchema},
   prompt: `You are a friendly, creative chef specializing in simple, delicious recipes.
 
-  Generate a recipe based on the ingredients and equipment provided by the user.
+  Generate a recipe based on the ingredients provided by the user.
   IMPORTANT: You MUST ONLY use the ingredients listed in the "Ingredients" section below. Do NOT add any extra ingredients to the recipe.
   List the ingredients required for the recipe in the "ingredients" output field, ensuring they are from the user's provided list.
 
-  If a common piece of equipment is missing, provide an "alternativeMethod" section.
+  The recipe instructions should be clear. If the primary method for your recipe involves a common piece of kitchen equipment (like an oven or microwave), also provide an "alternativeMethod" section in your output detailing how the recipe could be adapted if that common equipment is unavailable, perhaps suggesting stovetop or other accessible methods.
 
-  Ingredients: {{ingredients}}
-  Equipment: {{equipment}}`,
+  Ingredients: {{ingredients}}`,
 });
 
 const generateRecipeFlow = ai.defineFlow(
@@ -62,7 +61,7 @@ const generateRecipeFlow = ai.defineFlow(
     outputSchema: GenerateRecipeOutputSchema,
   },
   async input => {
-    const {output} = await prompt(input);
+    const {output} = await prompt(input); // Input now only contains ingredients
     return output!;
   }
 );

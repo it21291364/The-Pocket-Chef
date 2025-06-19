@@ -10,7 +10,9 @@ export async function generateRecipeAction(input: GenerateRecipeInput): Promise<
     if (!input.ingredients || input.ingredients.length === 0) {
       return { error: "Oopsie! Please add some ingredients to get a recipe." };
     }
-    const result = await generateRecipeFlow(input);
+    // The 'input' object for generateRecipeFlow will now only expect 'ingredients'
+    // as per the updated GenerateRecipeInput type in the flow file.
+    const result = await generateRecipeFlow(input); 
     if (!result || !result.recipeName) {
         return { error: "Kawaii Chef is a bit stumped! Could you try different ingredients or be more specific?" };
     }
