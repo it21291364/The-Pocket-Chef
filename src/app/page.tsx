@@ -135,7 +135,7 @@ export default function KawaiiChefPage() {
             id="ingredients-input"
             tags={ingredients}
             setTags={setIngredients}
-            placeholder="e.g., eggs, cheese, love..."
+            placeholder="e.g., eggs, cheese, tomatoes..."
             label="What yummy ingredients do you have?"
             icon={<BroccoliIcon />}
           />
@@ -272,9 +272,10 @@ export default function KawaiiChefPage() {
       
       <footer className="text-center mt-12 mb-6 text-sm text-foreground/60 font-body">
         <div className="p-4 rounded-2xl inline-block">
-          <p>&copy; {new Date().getFullYear()} The Pocket Chef. Made with lots of <Heart className="inline h-4 w-4 text-accent fill-accent" /> and a sprinkle of AI magic!</p>
+          <p>&copy; {new Date().getFullYear()} The Pocket Chef. Made with <Heart className="inline h-4 w-4 text-accent fill-accent" /> and a sprinkle of AI magic!</p>
         </div>
       </footer>
     </div>
   );
 }
+
