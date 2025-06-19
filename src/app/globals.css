@@ -111,11 +111,10 @@
 
 @layer utilities {
   .jiggle-button:hover {
-    animation: jiggle 0.4s ease-in-out;
+    animation: jiggle-continuous 0.8s ease-in-out infinite;
   }
   .jiggle-button:active {
     animation: click-feedback 0.2s ease-out;
-    transform: scale(0.95);
   }
   .tag-remove-icon:hover {
     animation: bounce-small 0.5s;
@@ -130,7 +129,7 @@
   }
 }
 
-@keyframes jiggle {
+@keyframes jiggle-continuous {
   0%, 100% { transform: rotate(0deg) scale(1); }
   25% { transform: rotate(-3deg) scale(1.05); }
   75% { transform: rotate(3deg) scale(1.05); }
